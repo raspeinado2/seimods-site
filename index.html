@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SEI-MODs — Configurator</title>
+  <meta name="description" content="SEI-MODs watch configurator (prices and models loaded from editable files)." />
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1a2e;
+      --card2:#0c1629;
+      --text:#e7eefc;
+      --muted:#a9b7d6;
+      --line:rgba(255,255,255,.08);
+      --brand:#3aa0ff;
+      --good:#2dd4bf;
+      --warn:#f59e0b;
+      --bad:#fb7185;
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --r:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: radial-gradient(900px 380px at 20% 10%, rgba(58,160,255,.22), transparent 55%),
+                  radial-gradient(800px 360px at 80% 0%, rgba(45,212,191,.18), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 16px 60px}
+    header{
+      position:sticky;top:0;z-index:50;
+      background: rgba(11,18,32,.72);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .head{
+      max-width:1180px;margin:0 auto;
+      padding:14px 16px;
+      display:flex;align-items:center;gap:14px;justify-content:space-between;
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:220px}
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand h1{font-size:15px;margin:0;line-height:1.1}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{
+      padding:9px 12px;border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      font-size:12px;color:var(--muted);
+      text-decoration:none;
+      transition:.15s;
+    }
+    .pill:hover{transform:translateY(-1px);border-color:rgba(58,160,255,.35);color:var(--text)}
+    .pill.on{background: rgba(58,160,255,.14);border-color:rgba(58,160,255,.35);color:var(--text)}
+
+    .hero{
+      padding:22px 0 10px;
+      display:grid;grid-template-columns:1.2fr .8fr;gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width:980px){.hero{grid-template-columns:1fr}}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+    }
+    .hero .left{padding:18px}
+    .hero .right{padding:18px;display:flex;flex-direction:column;gap:12px}
+    .kicker{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+    .dot{width:8px;height:8px;border-radius:50%;background: var(--good);box-shadow:0 0 0 6px rgba(45,212,191,.12)}
+    h2{margin:10px 0 10px;font-size:26px;letter-spacing:.2px}
+    .sub{color:var(--muted);margin:0 0 14px;font-size:13px;line-height:1.55}
+    .banner{
+      background: rgba(58,160,255,.12);
+      border:1px solid rgba(58,160,255,.25);
+      padding:12px 12px;border-radius:14px;
+      color:var(--text);
+      font-size:13px;line-height:1.5;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .banner b{color:#cfe6ff}
+    .banner .ic{margin-top:1px}
+    .grid{
+      display:grid;grid-template-columns: 1fr 1fr;gap:14px;
+    }
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    .section-title{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+    .section-title h3{margin:0;font-size:14px;letter-spacing:.2px}
+    .section-title .muted{color:var(--muted);font-size:12px}
+    .pad{padding:16px}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    label{font-size:12px;color:var(--muted)}
+    select, input{
+      width:100%;padding:12px 12px;border-radius:12px;
+      background: rgba(10,18,34,.6);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      outline:none;
+    }
+    select:focus,input:focus{border-color: rgba(58,160,255,.45)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:540px){.two{grid-template-columns:1fr}}
+    .pricebox{
+      display:grid;grid-template-columns:1fr;gap:10px;
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+    .total{display:flex;align-items:baseline;justify-content:space-between}
+    .total .big{font-size:26px;font-weight:700}
+    .total .cur{color:var(--muted);font-size:12px}
+    .list{margin:0;padding-left:18px;color:var(--muted);font-size:12px;line-height:1.55}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    button{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;
+      transition:.15s;
+      font-size:12px;
+    }
+    button:hover{transform:translateY(-1px);border-color:rgba(58,160,255,.35)}
+    button.primary{
+      background: rgba(58,160,255,.18);
+      border-color: rgba(58,160,255,.35);
+    }
+
+    .preview{
+      display:grid;grid-template-columns: 180px 1fr;gap:14px;align-items:stretch;
+      background: rgba(0,0,0,.14);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+    }
+    @media (max-width:540px){.preview{grid-template-columns:1fr}}
+    .img{
+      width:100%;height:180px;border-radius:14px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .img img{width:100%;height:100%;object-fit:cover;display:block}
+    .img .ph{color:var(--muted);font-size:12px;padding:10px;text-align:center}
+    .meta h4{margin:0 0 6px;font-size:14px}
+    .meta .t{color:var(--muted);font-size:12px;line-height:1.55;margin:0}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      background: rgba(45,212,191,.10);
+      border:1px solid rgba(45,212,191,.22);
+      color:#c9fff5;font-size:11px;margin-top:8px
+    }
+
+    footer{margin-top:18px;color:var(--muted);font-size:12px;opacity:.9}
+    .small{font-size:11px;color:var(--muted)}
+    .err{color: #ffd1d1}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="head">
+    <div class="brand">
+      <div class="logo" title="SEI-MODs Logo">
+        <!-- Put your logo here: /assets/logo.jpg (or png) -->
+        <img id="logoImg" src="assets/logo.jpg" alt="SEI-MODs" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=&quot;color:rgba(255,255,255,.55);font-size:11px;padding:10px;text-align:center&quot;>Logo<br/>/assets/logo.jpg</div>';">
+      </div>
+      <div>
+        <h1>SEI-MODs Configurator</h1>
+        <p>Prices & models editable via TXT/JSON (no HTML edits)</p>
+      </div>
+    </div>
+
+    <nav>
+      <a class="pill on" href="#config">Configurator</a>
+      <a class="pill" href="#catalog">Catalog</a>
+      <a class="pill" href="#howto">How to update</a>
+      <a class="pill" href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="card left">
+      <div class="kicker"><span class="dot"></span> Live data from editable files</div>
+      <h2>Build your watch — choose movement, dial & options</h2>
+      <p class="sub">
+        This page loads:
+        <b>models/prices</b> from <code>/data/catalog.json</code> and the top message from <code>/data/message.txt</code>.
+        To add a new movement (7750 / 4130 / 3235 / SL4613D / SL4801 / SL4802…), you only edit the JSON and upload images.
+      </p>
+
+      <div class="banner" id="topBanner">
+        <div class="ic">🧩</div>
+        <div>
+          <b>Loading message…</b><br/>
+          <span class="small">Edit <code>/data/message.txt</code> to change this banner.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card right">
+      <div class="section-title">
+        <h3>Quick status</h3>
+        <span class="muted" id="statusText">Loading…</span>
+      </div>
+      <div class="pad">
+        <div class="pricebox">
+          <div class="total">
+            <div>
+              <div class="small">Estimated total</div>
+              <div class="big" id="totalPrice">$0.00</div>
+            </div>
+            <div class="cur" id="currencyTag">USD</div>
+          </div>
+          <ul class="list" id="breakdown"></ul>
+          <div class="btns">
+            <button class="primary" id="copyBtn">Copy quote</button>
+            <button id="resetBtn">Reset</button>
+          </div>
+          <div class="small" id="hintText"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="config" class="grid">
+    <div class="card">
+      <div class="section-title">
+        <h3>Configuration</h3>
+        <span class="muted">Editable via <code>catalog.json</code></span>
+      </div>
+
+      <div class="pad row">
+        <div class="row">
+          <label for="movementSelect">Movement</label>
+          <select id="movementSelect"></select>
+        </div>
+
+        <div class="two">
+          <div class="row">
+            <label for="dialSelect">Dial model</label>
+            <select id="dialSelect"></select>
+          </div>
+          <div class="row">
+            <label for="caseSelect">Case</label>
+            <select id="caseSelect"></select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="row">
+            <label for="strapSelect">Strap / Bracelet</label>
+            <select id="strapSelect"></select>
+          </div>
+          <div class="row">
+            <label for="extrasSelect">Extras</label>
+            <select id="extrasSelect"></select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="row">
+            <label for="qtyInput">Quantity</label>
+            <input id="qtyInput" type="number" min="1" value="1" />
+          </div>
+          <div class="row">
+            <label for="notesInput">Notes</label>
+            <input id="notesInput" type="text" placeholder="e.g. no-date, custom logo, skeleton request…" />
+          </div>
+        </div>
+
+        <div class="small" id="loadErrors"></div>
+      </div>
+    </div>
+
+    <div class="card" id="catalog">
+      <div class="section-title">
+        <h3>Preview</h3>
+        <span class="muted">Image from JSON path</span>
+      </div>
+
+      <div class="pad">
+        <div class="preview">
+          <div class="img" id="imgBox">
+            <div class="ph">Select a model to view image</div>
+          </div>
+          <div class="meta">
+            <h4 id="previewTitle">—</h4>
+            <p class="t" id="previewDesc">—</p>
+            <div class="tag" id="previewTag" style="display:none;">📌</div>
+          </div>
+        </div>
+
+        <footer style="margin-top:12px">
+          <div class="small">
+            Tip: put images in <code>/assets/models/</code> and reference them in <code>catalog.json</code>.
+          </div>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+  <section id="howto" class="card" style="margin-top:16px">
+    <div class="section-title">
+      <h3>How to update (no HTML edits)</h3>
+      <span class="muted">DonDominio / FTP friendly</span>
+    </div>
+    <div class="pad">
+      <ol class="list" style="padding-left:18px;margin:0">
+        <li><b>Update prices / models:</b> edit <code>/data/catalog.json</code> (with Notepad). Save and upload it.</li>
+        <li><b>Update the top banner message:</b> edit <code>/data/message.txt</code>. Save and upload it.</li>
+        <li><b>Add images:</b> upload JPG/PNG to <code>/assets/models/</code> and set that path in JSON (example: <code>assets/models/sl4802-skeleton.jpg</code>).</li>
+      </ol>
+      <p class="small" style="margin-top:10px">
+        If something does not load, check: file names, uppercase/lowercase, and that the server allows serving <code>.json</code> and <code>.txt</code>.
+      </p>
+    </div>
+  </section>
+
+  <section id="contact" class="card" style="margin-top:16px">
+    <div class="section-title">
+      <h3>Contact</h3>
+      <span class="muted">Email only</span>
+    </div>
+    <div class="pad">
+      <div class="small">
+        Put your email in <code>/data/catalog.json</code> (field: <code>contactEmail</code>) and it will be shown here:
+      </div>
+      <div style="margin-top:10px;font-size:14px">
+        ✉️ <a id="emailLink" href="#">loading…</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/**
+ * Files you edit (NO HTML edits):
+ *  - /data/catalog.json
+ *  - /data/message.txt
+ *
+ * Images:
+ *  - /assets/logo.jpg
+ *  - /assets/models/*.jpg
+ */
+
+const state = {
+  catalog: null,
+  currency: "USD",
+  selected: {
+    movementId: null,
+    dialId: null,
+    caseId: null,
+    strapId: null,
+    extrasId: null,
+    qty: 1,
+    notes: ""
+  }
+};
+
+const $ = (id)=>document.getElementById(id);
+
+function money(n){
+  const cur = state.currency || "USD";
+  try{
+    return new Intl.NumberFormat(undefined, {style:"currency", currency:cur}).format(n || 0);
+  }catch(e){
+    return "$" + (n || 0).toFixed(2);
+  }
+}
+
+function setStatus(okText, isError=false){
+  $("statusText").textContent = okText;
+  $("statusText").style.color = isError ? "var(--bad)" : "var(--muted)";
+}
+
+function optionHTML(items, placeholder="Select…"){
+  let html = `<option value="">${placeholder}</option>`;
+  for(const it of items){
+    html += `<option value="${it.id}">${it.name}</option>`;
+  }
+  return html;
+}
+
+function findById(list, id){
+  return (list || []).find(x => x.id === id) || null;
+}
+
+function safeNum(x, def=0){
+  const n = Number(x);
+  return Number.isFinite(n) ? n : def;
+}
+
+function compute(){
+  const c = state.catalog;
+  if(!c) return;
+
+  const qty = Math.max(1, safeNum(state.selected.qty, 1));
+  state.selected.qty = qty;
+
+  const mv = findById(c.movements, state.selected.movementId);
+  const dl = findById(c.dials, state.selected.dialId);
+  const cs = findById(c.cases, state.selected.caseId);
+  const st = findById(c.straps, state.selected.strapId);
+  const ex = findById(c.extras, state.selected.extrasId);
+
+  const rows = [];
+  let total = 0;
+
+  function addRow(label, item){
+    if(!item) return;
+    const price = safeNum(item.price, 0);
+    rows.push({label, name:item.name, price});
+    total += price;
+  }
+
+  addRow("Movement", mv);
+  addRow("Dial", dl);
+  addRow("Case", cs);
+  addRow("Strap", st);
+  addRow("Extras", ex);
+
+  const perUnit = total;
+  const grand = perUnit * qty;
+
+  $("currencyTag").textContent = state.currency || "USD";
+  $("totalPrice").textContent = money(grand);
+
+  // breakdown
+  const ul = $("breakdown");
+  ul.innerHTML = "";
+  if(rows.length === 0){
+    ul.innerHTML = "<li>Select options to see price breakdown.</li>";
+  }else{
+    for(const r of rows){
+      const li = document.createElement("li");
+      li.textContent = `${r.label}: ${r.name} — ${money(r.price)} (per unit)`;
+      ul.appendChild(li);
+    }
+    const li2 = document.createElement("li");
+    li2.textContent = `Quantity: ${qty} — Total: ${money(grand)}`;
+    ul.appendChild(li2);
+  }
+
+  // hint
+  $("hintText").textContent = (c.noteHint || "").trim();
+
+  // preview
+  const title = [];
+  if(mv) title.push(mv.name);
+  if(dl) title.push(dl.name);
+  $("previewTitle").textContent = title.length ? title.join(" • ") : "—";
+
+  const descParts = [];
+  if(mv && mv.details) descParts.push(mv.details);
+  if(dl && dl.details) descParts.push(dl.details);
+  $("previewDesc").textContent = descParts.length ? descParts.join(" | ") : "—";
+
+  // tag
+  const tag = (mv && mv.tag) ? mv.tag : ((dl && dl.tag) ? dl.tag : "");
+  const tagEl = $("previewTag");
+  if(tag){
+    tagEl.style.display = "inline-flex";
+    tagEl.textContent = "📌 " + tag;
+  }else{
+    tagEl.style.display = "none";
+  }
+
+  // image priority: dial image, else movement image
+  const imgPath = (dl && dl.image) ? dl.image : ((mv && mv.image) ? mv.image : "");
+  renderImage(imgPath);
+}
+
+function renderImage(path){
+  const box = $("imgBox");
+  box.innerHTML = "";
+  if(!path){
+    box.innerHTML = `<div class="ph">No image configured.<br/>Add <code>image</code> in catalog.json</div>`;
+    return;
+  }
+  const img = document.createElement("img");
+  img.alt = "Model image";
+  img.src = path;
+  img.onerror = ()=>{
+    box.innerHTML = `<div class="ph err">Image not found:<br/><code>${path}</code><br/>Check path & filename.</div>`;
+  };
+  box.appendChild(img);
+}
+
+function bindUI(){
+  $("movementSelect").addEventListener("change", (e)=>{
+    state.selected.movementId = e.target.value || null;
+    compute();
+  });
+  $("dialSelect").addEventListener("change", (e)=>{
+    state.selected.dialId = e.target.value || null;
+    compute();
+  });
+  $("caseSelect").addEventListener("change", (e)=>{
+    state.selected.caseId = e.target.value || null;
+    compute();
+  });
+  $("strapSelect").addEventListener("change", (e)=>{
+    state.selected.strapId = e.target.value || null;
+    compute();
+  });
+  $("extrasSelect").addEventListener("change", (e)=>{
+    state.selected.extrasId = e.target.value || null;
+    compute();
+  });
+  $("qtyInput").addEventListener("input", (e)=>{
+    state.selected.qty = e.target.value;
+    compute();
+  });
+  $("notesInput").addEventListener("input", (e)=>{
+    state.selected.notes = e.target.value || "";
+  });
+
+  $("resetBtn").addEventListener("click", ()=>{
+    state.selected = {movementId:null,dialId:null,caseId:null,strapId:null,extrasId:null,qty:1,notes:""};
+    $("movementSelect").value = "";
+    $("dialSelect").value = "";
+    $("caseSelect").value = "";
+    $("strapSelect").value = "";
+    $("extrasSelect").value = "";
+    $("qtyInput").value = "1";
+    $("notesInput").value = "";
+    compute();
+  });
+
+  $("copyBtn").addEventListener("click", async ()=>{
+    const c = state.catalog;
+    const mv = findById(c.movements, state.selected.movementId);
+    const dl = findById(c.dials, state.selected.dialId);
+    const cs = findById(c.cases, state.selected.caseId);
+    const st = findById(c.straps, state.selected.strapId);
+    const ex = findById(c.extras, state.selected.extrasId);
+    const qty = Math.max(1, safeNum(state.selected.qty, 1));
+    const lines = [];
+    lines.push("SEI-MODs Quote");
+    lines.push("—");
+    if(mv) lines.push(`Movement: ${mv.name} (${money(safeNum(mv.price,0))})`);
+    if(dl) lines.push(`Dial: ${dl.name} (${money(safeNum(dl.price,0))})`);
+    if(cs) lines.push(`Case: ${cs.name} (${money(safeNum(cs.price,0))})`);
+    if(st) lines.push(`Strap: ${st.name} (${money(safeNum(st.price,0))})`);
+    if(ex) lines.push(`Extras: ${ex.name} (${money(safeNum(ex.price,0))})`);
+    lines.push(`Qty: ${qty}`);
+    if((state.selected.notes||"").trim()) lines.push(`Notes: ${state.selected.notes.trim()}`);
+
+    // total
+    let perUnit = 0;
+    for(const it of [mv,dl,cs,st,ex]) if(it) perUnit += safeNum(it.price,0);
+    const grand = perUnit * qty;
+    lines.push("—");
+    lines.push(`Total: ${money(grand)} (${state.currency || "USD"})`);
+
+    const text = lines.join("\n");
+    try{
+      await navigator.clipboard.writeText(text);
+      setStatus("Copied quote to clipboard ✅");
+      setTimeout(()=>setStatus("Ready"), 1200);
+    }catch(e){
+      alert(text);
+    }
+  });
+}
+
+async function loadFiles(){
+  // Load message.txt
+  try{
+    const t = await fetch("data/message.txt", {cache:"no-store"});
+    const msg = (await t.text()).trim();
+    const banner = $("topBanner");
+    banner.innerHTML = `<div class="ic">🧩</div><div><b>${escapeHTML(msg || "Welcome!")}</b><br/><span class="small">Edit <code>/data/message.txt</code> to change this banner.</span></div>`;
+  }catch(e){
+    $("topBanner").innerHTML = `<div class="ic">⚠️</div><div><b>message.txt not found</b><br/><span class="small err">Create <code>/data/message.txt</code>.</span></div>`;
+  }
+
+  // Load catalog.json
+  const errors = [];
+  try{
+    const r = await fetch("data/catalog.json", {cache:"no-store"});
+    const json = await r.json();
+    state.catalog = json;
+    state.currency = json.currency || "USD";
+
+    // Fill selects
+    $("movementSelect").innerHTML = optionHTML(json.movements || [], "Select movement…");
+    $("dialSelect").innerHTML = optionHTML(json.dials || [], "Select dial…");
+    $("caseSelect").innerHTML = optionHTML(json.cases || [], "Select case…");
+    $("strapSelect").innerHTML = optionHTML(json.straps || [], "Select strap…");
+    $("extrasSelect").innerHTML = optionHTML(json.extras || [], "Select extras…");
+
+    // Contact
+    const email = (json.contactEmail || "").trim();
+    const link = $("emailLink");
+    if(email){
+      link.textContent = email;
+      link.href = "mailto:" + email;
+    }else{
+      link.textContent = "add contactEmail in /data/catalog.json";
+      link.href = "#";
+    }
+
+    setStatus("Ready");
+    compute();
+  }catch(e){
+    errors.push("catalog.json not found or invalid JSON. Create /data/catalog.json (see template below).");
+    setStatus("Data load error", true);
+  }
+
+  $("loadErrors").innerHTML = errors.length ? `<span class="err">${errors.join("<br/>")}</span>` : "";
+}
+
+function escapeHTML(str){
+  return (str || "").replace(/[&<>"']/g, (m)=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
+bindUI();
+loadFiles();
+</script>
+
+</body>
+</html>

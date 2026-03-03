@@ -1,0 +1,86 @@
+[
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_BLACK-RED-CERAMIC",
+    "name": "Daytona Bezel – Black/Red Ceramic",
+    "image": "assets/bezels/daytona_bezel_black-red-ceramic.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_BLACK-CERAMIC",
+    "name": "Daytona Bezel – Black Ceramic",
+    "image": "assets/bezels/daytona_bezel_black-ceramic.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_BROWN_CERAMIC_385X305",
+    "name": "Daytona Bezel – Brown Ceramic 38.5X30.5",
+    "image": "assets/bezels/daytona_bezel_brown_ceramic_38.5x30.5.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_BROWN_CERAMIC_STEEL_385X305",
+    "name": "Daytona Bezel – Brown Ceramic Steel 38.5X30.5",
+    "image": "assets/bezels/daytona_bezel_brown_ceramic_steel_38.5x30.5.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_BROWN-CERAMIC",
+    "name": "Daytona Bezel – Brown Ceramic",
+    "image": "assets/bezels/daytona_bezel_brown-ceramic.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_GOLD-CERAMIC",
+    "name": "Daytona Bezel – Gold Ceramic",
+    "image": "assets/bezels/daytona_bezel_gold-ceramic.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  },
+  {
+    "id": "BEZEL-DAYTONA_BEZEL_ROSE_GOLD-CERAMIC",
+    "name": "Daytona Bezel – Rose Gold Ceramic",
+    "image": "assets/bezels/daytona_bezel_rose_gold-ceramic.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "chronograph"
+      ]
+    },
+    "notes": "Ceramic bezel (Daytona style)."
+  }
+]

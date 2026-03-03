@@ -1,0 +1,14 @@
+[
+  {
+    "id": "BRACELET-OYSTER-POLISHED",
+    "name": "Oyster Bracelet (Polished Center)",
+    "image": "assets/bracelets/bracelet_oyster_polished.jpg",
+    "price": 0
+  },
+  {
+    "id": "BRACELET-JUBILEE",
+    "name": "Jubilee Bracelet",
+    "image": "assets/bracelets/bracelet_jubilee.jpg",
+    "price": 0
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "CRYSTAL-SAPPHIRE-AR",
+    "name": "Sapphire Crystal with AR",
+    "image": "assets/crystals/crystal_sapphire_ar.jpg",
+    "price": 0
+  },
+  {
+    "id": "CRYSTAL-SAPPHIRE-DOME",
+    "name": "Domed Sapphire Crystal",
+    "image": "assets/crystals/crystal_sapphire_dome.jpg",
+    "price": 0,
+    "compatibility": {
+      "platform": [
+        "diver"
+      ]
+    }
+  }
+]

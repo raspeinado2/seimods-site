@@ -1,0 +1,14 @@
+[
+  {
+    "id": "CROWN-SCREW-DOWN",
+    "name": "Screw-down Crown",
+    "image": "assets/crowns/crown_screw_down.jpg",
+    "price": 0
+  },
+  {
+    "id": "CROWN-SIGNED-LOGO",
+    "name": "Signed Crown (Custom Logo)",
+    "image": "assets/crowns/crown_signed_logo.jpg",
+    "price": 0
+  }
+]
